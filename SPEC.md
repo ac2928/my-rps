@@ -51,7 +51,8 @@ Use `unit`, `integration`, and `e2e` pytest markers. Run `.venv/bin/python check
 ### Work record
 
 - Issue: https://github.com/ac2928/my-rps/issues/1
-- Pull request / CI: add actual URLs when they exist.
+- Pull request: https://github.com/ac2928/my-rps/pull/2
+- CI run: https://github.com/ac2928/my-rps/actions/runs/41483545528/job/125407825397?pr=2
 - Implementation: [game.py](game.py). determine_winner uses a BEATS dictionary: the same move is a tie, beating the computer's move is a win, otherwise it is a loss.
 - Tests: [tests/test_game.py](tests/test_game.py) has the nine unit outcomes and one integration test (rock vs paper with only the computer's choice fixed shows both choices and "Computer wins"). [tests/e2e/test_round.py](tests/e2e/test_round.py) plays rock then paper in Chromium with the computer fixed to scissors: "You win!", then a new round showing "Computer wins". The supplied invalid-input tests in tests/test_shell.py still pass (HTTP 400 with a helpful message).
 - Checks: full .venv/bin/python check.py on 2026-11-02: PASS Black, PASS Pylint, PASS pytest non-browser checks, PASS pytest real Chromium browser. The first run failed Black and Pylint only because the two new test files were missing a final newline; I fixed that with Black and reran.
