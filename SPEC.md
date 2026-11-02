@@ -27,7 +27,12 @@ Results are from the **player’s perspective**. `determine_winner(player, compu
 
 ### Agreed plan
 
-Before implementation, predict one matchup and explain it with your local coding agent. Discuss a short plan and checks. Once it makes sense, ask the agent to replace this paragraph with the agreed plan, preserving the expected results above. Continue in the same chat.
+- My prediction: I choose rock and the computer chooses paper, so I lose. Paper beats rock by covering it. This matches the expected-results table above.
+- Scope: implement only determine_winner(player, computer) in game.py, returning win, lose, or tie from the player's perspective. Keep the supplied server, page, and styles. No scoring, saved history, accounts, new framework, or AI API.
+- Valid losing round (positive case): player rock, computer paper returns lose, and the page shows both choices and "Computer wins".
+- Rejected input (negative case): a missing or unsupported move such as lizard returns HTTP 400 with "Choose Rock, Paper, or Scissors to play.", and the rule function is not called.
+- Checks: follow the Checks table below: nine unit cases in tests/test_game.py, one real request/result integration test (only the computer's choice fixed), reuse the supplied invalid-input tests, and one browser round plus replay in tests/e2e/test_round.py. Run the full .venv/bin/python check.py.
+- Help received: Claude (chat assistant) explained the steps; I made the predictions and edits.
 
 ### Checks
 
@@ -42,9 +47,13 @@ Before coding, agree this small test plan with AI:
 
 Use `unit`, `integration`, and `e2e` pytest markers. Run `.venv/bin/python check.py` for Black, Pylint, fast tests, and browser checks; then review the diff. Keep shared settings and meaningful assertions intact. The student still plays, inspects a rule and its test, and gives feedback. Browser automation does not establish every aspect of usability or application performance.
 
+
 ### Work record
 
-- Issue: add your own issue URL.
+- Issue: https://github.com/ac2928/my-rps/issues/1
 - Pull request / CI: add actual URLs when they exist.
-- Implementation: **Not implemented.** The shell is supplied; `game.py` is unfinished.
-- Checks: **Rules not verified.** Supplied request/browser tests cover the shell only. After implementation, record actual full-check results and your browser observations here; put detailed results in the PR. Passing formatting and analysis alone is not evidence of correct rules.
+- Implementation: [game.py](game.py). determine_winner uses a BEATS dictionary: the same move is a tie, beating the computer's move is a win, otherwise it is a loss.
+- Tests: [tests/test_game.py](tests/test_game.py) has the nine unit outcomes and one integration test (rock vs paper with only the computer's choice fixed shows both choices and "Computer wins"). [tests/e2e/test_round.py](tests/e2e/test_round.py) plays rock then paper in Chromium with the computer fixed to scissors: "You win!", then a new round showing "Computer wins". The supplied invalid-input tests in tests/test_shell.py still pass (HTTP 400 with a helpful message).
+- Checks: full .venv/bin/python check.py on 2026-11-02: PASS Black, PASS Pylint, PASS pytest non-browser checks, PASS pytest real Chromium browser. The first run failed Black and Pylint only because the two new test files were missing a final newline; I fixed that with Black and reran.
+- Test explanation: This test is checking if rock vs paper will return "lose". If the code got the rule backwards and said rock beats paper, it would return "win" instead, and the test would fail.
+- Browser observation: I picked rock and the computer picked scissors; it said "You win!" because rock beats scissors. Tab and Enter worked to choose a move, and clicking again started a new round.
